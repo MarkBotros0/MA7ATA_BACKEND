@@ -1,6 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../../shared/entities/base.entity';
 import { UserRole } from '../enums/user-roles.enum';
+import { Gender } from '../enums/gender.enum';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -29,6 +30,7 @@ export class User extends BaseEntity {
 
   @Column({
     type: 'varchar',
+    name: 'refresh_token',
     length: 768,
     nullable: true
   })
@@ -41,4 +43,19 @@ export class User extends BaseEntity {
     default: [UserRole.NORMAL]
   })
   userRoles: UserRole[];
+
+  @Column({
+    type: 'set',
+    name: 'gender',
+    enum: Gender,
+    nullable: true
+  })
+  gender: Gender;
+
+  @Column({
+    type: 'date',
+    name: 'date_of_birth',
+    nullable: true
+  })
+  dateOfBirth: Date;
 }
