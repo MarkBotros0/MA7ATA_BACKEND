@@ -16,7 +16,7 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalFilters(new HttpExceptionFilter());
   app.setGlobalPrefix('api');
-  app.use(helmet());
+  app.use(helmet({ crossOriginResourcePolicy: false }));
   app.useGlobalPipes(
     new ValidationPipe({
       enableDebugMessages: true

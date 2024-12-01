@@ -1,7 +1,8 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../shared/entities/base.entity';
 import { UserRole } from '../enums/user-roles.enum';
 import { Gender } from '../enums/gender.enum';
+import { BlacklistedRefreshToken } from '../../auth/entities/blacklisted-refresh-token.entity';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -29,14 +30,6 @@ export class User extends BaseEntity {
   password: string;
 
   @Column({
-    type: 'varchar',
-    name: 'refresh_token',
-    length: 768,
-    nullable: true
-  })
-  refreshToken: string;
-
-  @Column({
     type: 'set',
     name: 'user_roles',
     enum: UserRole,
@@ -58,4 +51,9 @@ export class User extends BaseEntity {
     nullable: true
   })
   dateOfBirth: Date;
+
+  @OneToMany(() => BlacklistedRefreshToken, (token) => token.user, {
+    cascade: true
+  })
+  blacklistedRefreshTokens: BlacklistedRefreshToken[];
 }

@@ -4,7 +4,6 @@ import { catchError, lastValueFrom, retry, throwError } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { handleVictoryLinkErrors } from './handle-victory-link-errors';
 import { SMS_LANGUAGES } from './language.enum';
-import console from 'console';
 
 export class VictoryLinkClient {
   private static _instance: VictoryLinkClient;
@@ -40,7 +39,7 @@ export class VictoryLinkClient {
             SMSText: sms,
             SMSLang: SMS_LANGUAGES.ENGLISH,
             SMSSender: this.sender,
-            SMSReceiver: phoneNumber,
+            SMSReceiver: phoneNumber.substring(1),
             SMSID: uuidv4()
           }
         )

@@ -6,13 +6,13 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  'jwt-refresh',
+  'jwt-refresh'
 ) {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.JWT_REFRESH_SECRET,
-      passReqToCallback: true,
+      passReqToCallback: true
     });
   }
 

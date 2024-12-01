@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { UsersService } from '../../users/users.service';
 import { User } from '../../users/entities/user.entity';
@@ -12,6 +8,7 @@ import { AuthTokens } from '../types/auth-tokens.type';
 import { JwtPayload } from '../types/jwt.payload';
 import { AuthDto } from '../dto/auth.dto';
 import { OtpService } from './otp.service';
+import { BlacklistTokenService } from './blacklist-token.service';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +18,8 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-    private readonly otpService: OtpService
+    private readonly otpService: OtpService,
+    private readonly blacklistTokenService: BlacklistTokenService
   ) {
     this.API_KEY = process.env.API_KEY;
   }
@@ -30,7 +28,7 @@ export class AuthService {
     return argon2.hash(data);
   }
 
-  async signUp(authDto: AuthDto): Promise<{ tokens: AuthTokens }> {
+  async registerUser(authDto: AuthDto): Promise<{ tokens: AuthTokens }> {
     const otpMatches: boolean = await this.otpService.verifyOtp(authDto);
     if (!otpMatches) {
       throw new BadRequestException('OTP provided is not correct');
@@ -87,7 +85,7 @@ export class AuthService {
     });
   }
 
-  async signIn(authDto: AuthDto): Promise<{ tokens: AuthTokens }> {
+  async login(authDto: AuthDto): Promise<{ tokens: AuthTokens }> {
     const isOtpVerified = await this.otpService.verifyOtp(authDto);
     if (!isOtpVerified) throw new BadRequestException('Otp is incorrect');
 
@@ -100,21 +98,23 @@ export class AuthService {
     return { tokens };
   }
 
-  async refreshTokens(userId: number, refreshToken: string) {
-    const user = await this.usersService.findOneById(userId);
-    if (!user || !user.refreshToken)
-      throw new ForbiddenException('Access Denied');
-    const refreshTokenMatches = await argon2.verify(
-      user.refreshToken,
-      refreshToken
-    );
-    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
-    const tokens = await this.getTokens(user.id, user.phoneNumber);
+  async refreshTokens(
+    userId: number,
+    refreshToken: string
+  ): Promise<AuthTokens> {
+    const user: User = await this.usersService.findOneById(userId);
+    await this.blacklistTokenService.addToken(refreshToken, user.id);
+    const tokens: AuthTokens = await this.getTokens(user.id, user.phoneNumber);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }
 
   validateApiKey(apiKey: string): boolean {
     return apiKey == this.API_KEY;
+  }
+
+  async logout(userId: number, refreshToken: any): Promise<void> {
+    const user: User = await this.usersService.findOneById(userId);
+    await this.blacklistTokenService.addToken(refreshToken, user.id);
   }
 }

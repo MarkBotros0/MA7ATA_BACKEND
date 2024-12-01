@@ -53,7 +53,7 @@ export class OtpService {
   async verifyOtp(authDto: AuthDto): Promise<boolean> {
     const { phoneNumber, otp } = authDto;
 
-    const otpExists = await this.findOtpByPhoneNumber(phoneNumber);
+    const otpExists: OtpCode = await this.findOtpByPhoneNumber(phoneNumber);
 
     if (!otpExists) {
       throw new ConflictException('Otp of this phone number is expired');

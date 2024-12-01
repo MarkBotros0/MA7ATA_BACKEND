@@ -10,18 +10,21 @@ import { OtpCode } from './entities/otp-code.entity';
 import { OtpService } from './services/otp.service';
 import { ApiKeyStrategy } from './strategies/api-key.strategy';
 import { PassportModule } from '@nestjs/passport';
+import { BlacklistTokenService } from './services/blacklist-token.service';
+import { BlacklistedRefreshToken } from './entities/blacklisted-refresh-token.entity';
 
 @Module({
   imports: [
     UsersModule,
     JwtModule.register({}),
     PassportModule,
-    TypeOrmModule.forFeature([OtpCode])
+    TypeOrmModule.forFeature([OtpCode, BlacklistedRefreshToken])
   ],
   controllers: [AuthController],
   providers: [
     AuthService,
     OtpService,
+    BlacklistTokenService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
     ApiKeyStrategy
