@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import * as argon2 from 'argon2';
 import { UsersService } from '../../users/users.service';
 import { User } from '../../users/entities/user.entity';
 import { AuthTokens } from '../types/auth-tokens.type';

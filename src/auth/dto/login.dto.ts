@@ -14,6 +14,7 @@ export class LoginDto {
     message: 'Phone Number must start with a "+" followed by digits only.'
   })
   @MaxLength(15, { message: 'maximum phone number length is 15' })
+  @MinLength(5, { message: 'minimum phone number length is 5' })
   @ApiProperty()
   phoneNumber: string;
 

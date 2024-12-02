@@ -51,7 +51,7 @@ export class AuthController {
   @Get('hello-world')
   @UseGuards(AccessTokenGuard)
   async helloWorld(@Req() req) {
-    return { message: 'success' };
+    return { message: 'success', request: req };
   }
 
   @UseGuards(RefreshTokenGuard)

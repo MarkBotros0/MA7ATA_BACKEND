@@ -8,7 +8,6 @@ import { UsersService } from '../../users/users.service';
 import { VictoryLinkClient } from '../../shared/victory-link/victory-link-client';
 import { Cron } from '@nestjs/schedule';
 import * as process from 'node:process';
-import { RegisterDto } from '../dto/register.dto';
 import { LoginDto } from '../dto/login.dto';
 
 @Injectable()
