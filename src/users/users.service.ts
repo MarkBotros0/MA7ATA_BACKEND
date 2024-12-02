@@ -16,11 +16,20 @@ export class UsersService {
   ) {}
 
   async findOneByPhoneNumber(phoneNumber: string): Promise<User> {
-    return this.usersRepository.findOne({ where: { phoneNumber } });
+    const user: User = await this.usersRepository.findOne({
+      where: { phoneNumber }
+    });
+
+    if (!user)
+      throw new NotFoundException(
+        `User with phoneNumber: ${phoneNumber} is not found`
+      );
+
+    return user;
   }
 
   async findOneById(id: number): Promise<User> {
-    const user = this.usersRepository.findOne({ where: { id } });
+    const user: User = await this.usersRepository.findOne({ where: { id } });
 
     if (!user) {
       throw new NotFoundException(`User with id: ${id} is not found`);

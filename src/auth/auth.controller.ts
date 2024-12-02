@@ -1,12 +1,23 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards
+} from '@nestjs/common';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { AuthService } from './services/auth.service';
 import { SendOTPDto } from './dto/send-otp.dto';
 import { OtpService } from './services/otp.service';
-import { AuthDto } from './dto/auth.dto';
+import { RegisterDto } from './dto/register.dto';
 import { ApiBearerAuth, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from './guards/access-token.guard';
 import { AuthTokens } from './types/auth-tokens.type';
+import { LoginDto } from './dto/login.dto';
+import { TokenService } from './services/token.service';
 
 @Controller('auth')
 @ApiSecurity('apiKey')
@@ -14,7 +25,8 @@ import { AuthTokens } from './types/auth-tokens.type';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly otpService: OtpService
+    private readonly otpService: OtpService,
+    private readonly tokenService: TokenService
   ) {}
 
   @Post('send-otp')
@@ -26,18 +38,19 @@ export class AuthController {
   }
 
   @Post('register')
-  async registerUser(@Req() req, @Body() body: AuthDto) {
+  async registerUser(@Req() req, @Body() body: RegisterDto) {
     return this.authService.registerUser(body);
   }
 
   @Post('login')
-  async login(@Req() req, @Body() body: AuthDto) {
+  @HttpCode(HttpStatus.OK)
+  async login(@Req() req, @Body() body: LoginDto) {
     return this.authService.login(body);
   }
 
-  @Post('hello-world')
+  @Get('hello-world')
   @UseGuards(AccessTokenGuard)
-  async helloWorld(@Req() req, @Body() body: AuthDto) {
+  async helloWorld(@Req() req) {
     return { message: 'success' };
   }
 
@@ -57,8 +70,7 @@ export class AuthController {
   @Post('refresh')
   @ApiBearerAuth()
   async refreshTokens(@Req() req): Promise<AuthTokens> {
-    const userId = req.user.id;
     const refreshToken = req.headers['authorization'].slice(7);
-    return this.authService.refreshTokens(userId, refreshToken);
+    return this.tokenService.refreshTokens(refreshToken);
   }
 }

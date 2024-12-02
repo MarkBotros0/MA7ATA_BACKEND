@@ -2,13 +2,12 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { UsersService } from '../../users/users.service';
 import { User } from '../../users/entities/user.entity';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { AuthTokens } from '../types/auth-tokens.type';
-import { JwtPayload } from '../types/jwt.payload';
-import { AuthDto } from '../dto/auth.dto';
+import { RegisterDto } from '../dto/register.dto';
 import { OtpService } from './otp.service';
-import { BlacklistTokenService } from './blacklist-token.service';
+import { TokenService } from './token.service';
+import { UserView } from '../../users/views/user.view';
+import { LoginDto } from '../dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,97 +15,48 @@ export class AuthService {
 
   constructor(
     private readonly usersService: UsersService,
-    private readonly configService: ConfigService,
-    private readonly jwtService: JwtService,
     private readonly otpService: OtpService,
-    private readonly blacklistTokenService: BlacklistTokenService
+    private readonly tokenService: TokenService
   ) {
     this.API_KEY = process.env.API_KEY;
   }
 
-  async hashData(data: string): Promise<string> {
-    return argon2.hash(data);
-  }
-
-  async registerUser(authDto: AuthDto): Promise<{ tokens: AuthTokens }> {
+  async registerUser(authDto: RegisterDto): Promise<{ tokens: AuthTokens }> {
     const otpMatches: boolean = await this.otpService.verifyOtp(authDto);
     if (!otpMatches) {
       throw new BadRequestException('OTP provided is not correct');
     }
 
-    const newUser: User = await this.usersService.create(authDto.phoneNumber);
+    // TODO search for user in old db by email
+    // TODO if found create legacy user with progress
 
-    const tokens: AuthTokens = await this.getTokens(
+    const newUser: User = await this.usersService.create(authDto.phoneNumber, {
+      email: authDto.email
+    });
+
+    const tokens: AuthTokens = await this.tokenService.getTokens(
       newUser.id,
       newUser.phoneNumber
     );
-    await this.updateRefreshToken(newUser.id, tokens.refreshToken);
+    await this.tokenService.updateRefreshToken(newUser.id, tokens.refreshToken);
 
     return { tokens };
   }
 
-  async generateAccessToken(
-    userId: number,
-    phoneNumber: string
-  ): Promise<string> {
-    const payload: JwtPayload = { sub: userId, phoneNumber: phoneNumber };
-    return this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRE_AFTER
-    });
-  }
-
-  async generateRefreshToken(
-    userId: number,
-    phoneNumber: string
-  ): Promise<string> {
-    const payload: JwtPayload = { sub: userId, phoneNumber: phoneNumber };
-    return this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRE_AFTER
-    });
-  }
-
-  async getTokens(userId: number, phoneNumber: string) {
-    const [accessToken, refreshToken] = await Promise.all([
-      this.generateAccessToken(userId, phoneNumber),
-      this.generateRefreshToken(userId, phoneNumber)
-    ]);
-    return {
-      accessToken,
-      refreshToken
-    };
-  }
-
-  async updateRefreshToken(userId: number, refreshToken: string) {
-    const hashedRefreshToken = await this.hashData(refreshToken);
-    await this.usersService.update(userId, {
-      refreshToken: hashedRefreshToken
-    });
-  }
-
-  async login(authDto: AuthDto): Promise<{ tokens: AuthTokens }> {
-    const isOtpVerified = await this.otpService.verifyOtp(authDto);
+  async login(loginDto: LoginDto): Promise<any> {
+    const isOtpVerified = await this.otpService.verifyOtp(loginDto);
     if (!isOtpVerified) throw new BadRequestException('Otp is incorrect');
 
     const user: User = await this.usersService.findOneByPhoneNumber(
-      authDto.phoneNumber
+      loginDto.phoneNumber
     );
 
-    const tokens: AuthTokens = await this.getTokens(user.id, user.phoneNumber);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return { tokens };
-  }
-
-  async refreshTokens(
-    userId: number,
-    refreshToken: string
-  ): Promise<AuthTokens> {
-    const user: User = await this.usersService.findOneById(userId);
-    await this.blacklistTokenService.addToken(refreshToken, user.id);
-    const tokens: AuthTokens = await this.getTokens(user.id, user.phoneNumber);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    const tokens: AuthTokens = await this.tokenService.getTokens(
+      user.id,
+      user.phoneNumber
+    );
+    await this.tokenService.updateRefreshToken(user.id, tokens.refreshToken);
+    return { tokens, user: new UserView(user).render() };
   }
 
   validateApiKey(apiKey: string): boolean {
@@ -115,6 +65,6 @@ export class AuthService {
 
   async logout(userId: number, refreshToken: any): Promise<void> {
     const user: User = await this.usersService.findOneById(userId);
-    await this.blacklistTokenService.addToken(refreshToken, user.id);
+    await this.tokenService.addTokenToBlacklist(refreshToken, user.id);
   }
 }

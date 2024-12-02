@@ -10,7 +10,7 @@ import { OtpCode } from './entities/otp-code.entity';
 import { OtpService } from './services/otp.service';
 import { ApiKeyStrategy } from './strategies/api-key.strategy';
 import { PassportModule } from '@nestjs/passport';
-import { BlacklistTokenService } from './services/blacklist-token.service';
+import { TokenService } from './services/token.service';
 import { BlacklistedRefreshToken } from './entities/blacklisted-refresh-token.entity';
 
 @Module({
@@ -24,7 +24,7 @@ import { BlacklistedRefreshToken } from './entities/blacklisted-refresh-token.en
   providers: [
     AuthService,
     OtpService,
-    BlacklistTokenService,
+    TokenService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
     ApiKeyStrategy

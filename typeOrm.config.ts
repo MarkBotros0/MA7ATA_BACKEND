@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 import { User } from './src/users/entities/user.entity';
 import { OtpCode } from './src/auth/entities/otp-code.entity';
+import { BlacklistedRefreshToken } from './src/auth/entities/blacklisted-refresh-token.entity';
 
 config();
 
@@ -16,7 +17,7 @@ export default new DataSource({
   username: configService.getOrThrow('MYSQL_USERNAME'),
   password: configService.getOrThrow('MYSQL_PASSWORD'),
   migrations: ['./migrations/*.ts'],
-  entities: [User, OtpCode],
+  entities: [User, OtpCode, BlacklistedRefreshToken],
   synchronize: false,
   logging: true
 });

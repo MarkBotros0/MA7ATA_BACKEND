@@ -3,12 +3,13 @@ import * as otpGenerator from 'otp-generator';
 import { OtpCode } from '../entities/otp-code.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository } from 'typeorm';
-import { AuthDto } from '../dto/auth.dto';
 import * as argon2 from 'argon2';
 import { UsersService } from '../../users/users.service';
 import { VictoryLinkClient } from '../../shared/victory-link/victory-link-client';
 import { Cron } from '@nestjs/schedule';
 import * as process from 'node:process';
+import { RegisterDto } from '../dto/register.dto';
+import { LoginDto } from '../dto/login.dto';
 
 @Injectable()
 export class OtpService {
@@ -50,7 +51,7 @@ export class OtpService {
     return otp;
   }
 
-  async verifyOtp(authDto: AuthDto): Promise<boolean> {
+  async verifyOtp(authDto: LoginDto): Promise<boolean> {
     const { phoneNumber, otp } = authDto;
 
     const otpExists: OtpCode = await this.findOtpByPhoneNumber(phoneNumber);
