@@ -1,9 +1,31 @@
+version: "1.0"
+
 services:
-  mysql:
+  app:
+    container_name: new_ma7ata_app
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app/src
+      - ./migrations:/app/migrations
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=development
+
+
+  db:
+    container_name: new_ma7ata_db
     image: mysql:latest
-    container_name: new-ma7ata-dev
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: my-password
-      MYSQL_DATABASE: ma7ata_dev
+      MYSQL_DATABASE: new_ma7ata_dev
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - dev-db-data:/var/lib/mysql
+
+volumes:
+  dev-db-data:

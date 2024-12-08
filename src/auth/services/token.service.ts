@@ -92,10 +92,7 @@ export class TokenService {
     const user: User = await this.usersService.findOneById(userId);
 
     await this.addTokenToBlacklist(refreshToken, user.id);
-    const tokens: AuthTokens = await this.getTokens(user.id, user.phoneNumber);
-
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    return await this.getTokens(user.id, user.phoneNumber);
   }
 
   async getTokens(userId: number, phoneNumber: string) {
@@ -107,13 +104,6 @@ export class TokenService {
       accessToken,
       refreshToken
     };
-  }
-
-  async updateRefreshToken(userId: number, refreshToken: string) {
-    const hashedRefreshToken = await this.hashData(refreshToken);
-    await this.usersService.update(userId, {
-      refreshToken: hashedRefreshToken
-    });
   }
 
   @Cron('0 0 * * *')

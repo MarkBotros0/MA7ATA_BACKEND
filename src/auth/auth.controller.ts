@@ -18,6 +18,8 @@ import { AccessTokenGuard } from './guards/access-token.guard';
 import { AuthTokens } from './types/auth-tokens.type';
 import { LoginDto } from './dto/login.dto';
 import { TokenService } from './services/token.service';
+import { AdminGuard } from './guards/admin.guard';
+import { NormalUserGuard } from './guards/normal-user.guard';
 
 @Controller('auth')
 @ApiSecurity('apiKey')
@@ -49,9 +51,9 @@ export class AuthController {
   }
 
   @Get('hello-world')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, NormalUserGuard)
   async helloWorld(@Req() req) {
-    return { message: 'success', request: req };
+    return { message: 'success', request: JSON.stringify(req) };
   }
 
   @UseGuards(RefreshTokenGuard)

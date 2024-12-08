@@ -37,8 +37,6 @@ export class AuthService {
       newUser.id,
       newUser.phoneNumber
     );
-    await this.tokenService.updateRefreshToken(newUser.id, tokens.refreshToken);
-
     return { tokens };
   }
 
@@ -54,7 +52,6 @@ export class AuthService {
       user.id,
       user.phoneNumber
     );
-    await this.tokenService.updateRefreshToken(user.id, tokens.refreshToken);
     return { tokens, user: new UserView(user).render() };
   }
 

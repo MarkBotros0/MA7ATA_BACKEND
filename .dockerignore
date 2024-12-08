@@ -1,0 +1,14 @@
+# Docker
+.docker
+Dockerfile
+.dockerignore
+
+# Git
+.gitignore
+.git
+README.md
+
+# Nest
+node_modules
+npm-debug.log
+dist
