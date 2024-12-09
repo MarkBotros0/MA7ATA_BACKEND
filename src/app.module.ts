@@ -13,8 +13,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ScheduleModule.forRoot(),
     DatabaseModule,
     AuthModule,
-    UsersModule,
-    CoursesModule
+    UsersModule
   ],
   controllers: [],
   providers: []
