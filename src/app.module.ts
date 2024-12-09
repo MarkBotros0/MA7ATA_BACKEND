@@ -6,7 +6,6 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { CoursesModule } from './courses/courses.module';
 
 @Module({
   imports: [
