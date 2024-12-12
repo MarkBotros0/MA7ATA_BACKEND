@@ -22,6 +22,7 @@ import { NormalUserGuard } from './guards/normal-user.guard';
 
 @Controller('auth')
 @ApiSecurity('apiKey')
+@ApiBearerAuth()
 @ApiTags('Auth')
 export class AuthController {
   constructor(
@@ -53,7 +54,7 @@ export class AuthController {
   @Get('hello-world')
   @UseGuards(AccessTokenGuard, NormalUserGuard)
   async helloWorld(@Req() req) {
-    return { message: 'success', request: JSON.stringify(req) };
+    return { message: 'success' };
   }
 
   @UseGuards(RefreshTokenGuard)
