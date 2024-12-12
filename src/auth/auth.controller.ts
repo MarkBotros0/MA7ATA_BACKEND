@@ -58,7 +58,7 @@ export class AuthController {
   }
 
   @UseGuards(RefreshTokenGuard)
-  @Get('logout')
+  @Post('logout')
   @ApiBearerAuth()
   async logout(@Req() req) {
     const refreshToken = req.headers['authorization'].slice(7);
