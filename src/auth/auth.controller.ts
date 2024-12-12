@@ -61,9 +61,8 @@ export class AuthController {
   @Get('logout')
   @ApiBearerAuth()
   async logout(@Req() req) {
-    const userId = req.user.id;
     const refreshToken = req.headers['authorization'].slice(7);
-    await this.authService.logout(userId, refreshToken);
+    await this.authService.logout(refreshToken);
     return {
       message: 'user has signed out successfully.'
     };

@@ -61,8 +61,7 @@ export class AuthService {
     return apiKey == this.API_KEY;
   }
 
-  async logout(userId: number, refreshToken: any): Promise<void> {
-    const user: User = await this.usersService.findOneById(userId);
-    await this.tokenService.addTokenToBlacklist(refreshToken, user.id);
+  async logout(refreshToken: any): Promise<void> {
+    await this.tokenService.addTokenToBlacklist(refreshToken);
   }
 }

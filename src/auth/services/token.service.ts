@@ -54,7 +54,8 @@ export class TokenService {
     });
   }
   s;
-  async addTokenToBlacklist(token: string, userId: number): Promise<void> {
+  async addTokenToBlacklist(token: string): Promise<void> {
+    const userId: number = this.extractUserIdClaimFromToken(token);
     const user: User = await this.usersService.findOneById(userId);
     await this.blacklistRepository.save({
       token: await this.hashData(token),
@@ -91,7 +92,7 @@ export class TokenService {
     const userId: number = this.extractUserIdClaimFromToken(refreshToken);
     const user: User = await this.usersService.findOneById(userId);
 
-    await this.addTokenToBlacklist(refreshToken, user.id);
+    await this.addTokenToBlacklist(refreshToken);
     return await this.getTokens(user.id, user.phoneNumber);
   }
 
