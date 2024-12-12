@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { CoursesModule } from './courses/courses.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     ScheduleModule.forRoot(),
     DatabaseModule,
     AuthModule,
-    UsersModule
+    UsersModule,
+    CoursesModule
   ],
   controllers: [],
   providers: []

@@ -18,7 +18,6 @@ import { AccessTokenGuard } from './guards/access-token.guard';
 import { AuthTokens } from './types/auth-tokens.type';
 import { LoginDto } from './dto/login.dto';
 import { TokenService } from './services/token.service';
-import { AdminGuard } from './guards/admin.guard';
 import { NormalUserGuard } from './guards/normal-user.guard';
 
 @Controller('auth')
@@ -41,7 +40,8 @@ export class AuthController {
 
   @Post('register')
   async registerUser(@Req() req, @Body() body: RegisterDto) {
-    return this.authService.registerUser(body);
+    await this.authService.registerUser(body);
+    return { message: 'Successfully created new user' };
   }
 
   @Post('login')

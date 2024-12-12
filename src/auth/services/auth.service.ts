@@ -33,6 +33,8 @@ export class AuthService {
       email: authDto.email
     });
 
+    console.log(newUser);
+
     const tokens: AuthTokens = await this.tokenService.getTokens(
       newUser.id,
       newUser.phoneNumber
