@@ -4,6 +4,9 @@ import { DataSource } from 'typeorm';
 import { User } from './src/users/entities/user.entity';
 import { OtpCode } from './src/auth/entities/otp-code.entity';
 import { BlacklistedRefreshToken } from './src/auth/entities/blacklisted-refresh-token.entity';
+import { Course } from './src/courses/entities/course.entity';
+import { CourseSection } from './src/courses/entities/course-module.entity';
+import { CourseContent } from './src/courses/entities/course-content.entity';
 
 config();
 
@@ -17,7 +20,14 @@ export default new DataSource({
   username: configService.getOrThrow('MYSQL_USERNAME'),
   password: configService.getOrThrow('MYSQL_PASSWORD'),
   migrations: ['./migrations/*.ts'],
-  entities: [User, OtpCode, BlacklistedRefreshToken],
+  entities: [
+    User,
+    OtpCode,
+    BlacklistedRefreshToken,
+    Course,
+    CourseSection,
+    CourseContent
+  ],
   synchronize: false,
   logging: true
 });

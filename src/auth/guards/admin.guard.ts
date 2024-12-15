@@ -3,10 +3,15 @@ import { UserRole } from '../../users/enums/user-roles.enum';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
-  canActivate(context: ExecutionContext): Promise<boolean> {
+  canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const roles = request.user?.userRoles;
 
-    return request.user && roles.includes(UserRole.ADMIN);
+    if (request.user && roles.includes(UserRole.ADMIN)) {
+      request.isAdmin = true;
+      return true;
+    }
+
+    return false;
   }
 }
