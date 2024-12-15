@@ -5,14 +5,14 @@ import { UserRole } from '../enums/user-roles.enum';
 export class UserView {
   constructor(private readonly data: User | User[]) {}
 
-  render() {
+  render(): any {
     if (Array.isArray(this.data)) {
       return this.data.map((user) => this.renderUser(user));
     }
     return this.renderUser(this.data);
   }
 
-  renderUser(user: User) {
+  private renderUser(user: User): any {
     if (!user) return;
 
     const rolePriority: UserRole[] = [
