@@ -1,7 +1,7 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../shared/entities/base.entity';
-import { CourseContentType } from '../course-type.enum';
-import { CourseModule } from './course-module.entity';
+import { CourseContentType } from '../enums/course-type.enum';
+import { CourseSection } from './course-module.entity';
 
 @Entity()
 export class CourseContent extends BaseEntity {
@@ -26,12 +26,17 @@ export class CourseContent extends BaseEntity {
 
   @Column({
     type: 'enum',
-    name: 'content_url',
+    name: 'content_type',
     enum: CourseContentType,
     default: CourseContentType.VIDEO
   })
   contentType: CourseContentType;
 
-  @ManyToOne(() => CourseModule, (courseModule) => courseModule.courseContents)
-  courseModule: CourseModule;
+  @ManyToOne(
+    () => CourseSection,
+    (courseSection) => courseSection.courseContents,
+    { onDelete: 'CASCADE' }
+  )
+  @JoinColumn({ name: 'course_section_id' })
+  courseSection: CourseSection;
 }

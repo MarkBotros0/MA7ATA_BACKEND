@@ -1,11 +1,10 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../shared/entities/base.entity';
-import { CourseContentType } from '../course-type.enum';
 import { Course } from './course.entity';
 import { CourseContent } from './course-content.entity';
 
 @Entity()
-export class CourseModule extends BaseEntity {
+export class CourseSection extends BaseEntity {
   @Column({
     type: 'varchar',
     length: 100
@@ -18,24 +17,16 @@ export class CourseModule extends BaseEntity {
   })
   description: string;
 
-  @Column({
-    type: 'varchar',
-    length: 255,
-    name: 'content_url'
+  @ManyToOne(() => Course, (course: Course) => course.courseSections, {
+    onDelete: 'CASCADE'
   })
-  contentUrl: string;
-
-  @Column({
-    type: 'enum',
-    name: 'content_url',
-    enum: CourseContentType,
-    default: CourseContentType.VIDEO
-  })
-  contentType: CourseContentType;
-
-  @ManyToOne(() => Course, (course: Course) => course.modules)
+  @JoinColumn({ name: 'course_id' })
   course: Course;
 
-  @OneToMany(() => CourseContent, (courseContent) => courseContent.courseModule)
+  @OneToMany(
+    () => CourseContent,
+    (courseContent) => courseContent.courseSection,
+    { cascade: true }
+  )
   courseContents: CourseContent[];
 }
