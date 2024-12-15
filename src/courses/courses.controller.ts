@@ -6,8 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
-  Req
+  UseGuards
 } from '@nestjs/common';
 import { CoursesService } from './services/courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -130,11 +129,11 @@ export class CoursesController {
   @UseGuards(AccessTokenGuard, AdminOrTeacherGuard)
   @Patch('course-sections/:courseSectionId')
   async updateCourseSection(
-    @Req() req,
-    @Param('courseSectionId') courseSectionId: number,
+    @TeacherId({ requiredForAdmin: false }) teacherId: number | undefined,
+    @Param('courseSectionId')
+    courseSectionId: number,
     @Body() updateCourseSectionDto: UpdateCourseSectionDto
   ) {
-    const teacherId: number = req?.teacher?.id;
     await this.courseSectionsService.update(
       courseSectionId,
       updateCourseSectionDto,
