@@ -8,24 +8,26 @@ import { Cron } from '@nestjs/schedule';
 import * as argon2 from 'argon2';
 import * as jwt from 'jsonwebtoken';
 import { JwtPayload } from '../types/jwt.payload';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthTokens } from '../types/auth-tokens.type';
 
 @Injectable()
 export class TokenService {
-  private readonly accessTokenExpireAfter: string;
-  private readonly refreshTokenExpireAfter: string;
+  private readonly JWT_ACCESS_SECRET: string;
+  private readonly JWT_REFRESH_SECRET: string;
+  private readonly ACCESS_TOKEN_EXPIRE_AFTER: string;
+  private readonly REFRESH_TOKEN_EXPIRE_AFTER: string;
 
   constructor(
     @InjectRepository(BlacklistedRefreshToken)
     private readonly blacklistRepository: Repository<BlacklistedRefreshToken>,
     private readonly usersService: UsersService,
-    private readonly configService: ConfigService,
     private readonly jwtService: JwtService
   ) {
-    this.accessTokenExpireAfter = process.env.ACCESS_TOKEN_EXPIRE_AFTER;
-    this.refreshTokenExpireAfter = process.env.REFRESH_TOKEN_EXPIRE_AFTER;
+    this.ACCESS_TOKEN_EXPIRE_AFTER = process.env.ACCESS_TOKEN_EXPIRE_AFTER;
+    this.REFRESH_TOKEN_EXPIRE_AFTER = process.env.REFRESH_TOKEN_EXPIRE_AFTER;
+    this.JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
+    this.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
   }
 
   async hashData(data: string): Promise<string> {
@@ -38,8 +40,8 @@ export class TokenService {
   ): Promise<string> {
     const payload: JwtPayload = { sub: userId, phoneNumber: phoneNumber };
     return this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-      expiresIn: this.accessTokenExpireAfter
+      secret: this.JWT_ACCESS_SECRET,
+      expiresIn: this.ACCESS_TOKEN_EXPIRE_AFTER
     });
   }
 
@@ -49,11 +51,11 @@ export class TokenService {
   ): Promise<string> {
     const payload: JwtPayload = { sub: userId, phoneNumber: phoneNumber };
     return this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-      expiresIn: this.refreshTokenExpireAfter
+      secret: this.JWT_REFRESH_SECRET,
+      expiresIn: this.REFRESH_TOKEN_EXPIRE_AFTER
     });
   }
-  s;
+
   async addTokenToBlacklist(token: string): Promise<void> {
     const userId: number = this.extractUserIdClaimFromToken(token);
     const user: User = await this.usersService.findOneById(userId);

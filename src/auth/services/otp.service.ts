@@ -56,7 +56,7 @@ export class OtpService {
     const otpExists: OtpCode = await this.findOtpByPhoneNumber(phoneNumber);
 
     if (!otpExists) {
-      throw new ConflictException('Otp of this phone number is expired');
+      throw new ConflictException('Otp of this phone number has expired');
     }
 
     return argon2.verify(otpExists.otp, otp);
