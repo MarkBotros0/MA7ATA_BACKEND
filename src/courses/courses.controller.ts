@@ -22,7 +22,7 @@ import { CourseSection } from './entities/course-module.entity';
 import { CourseSectionView } from './views/course-section.view';
 import { CourseSectionsService } from './services/course-sections.service';
 import { UpdateCourseSectionDto } from './dto/update-course-section.dto';
-import { TeacherId } from '../shared/decorators/teacher.decorator';
+import { TeacherId } from '../shared/decorators/teacher-id.decorator';
 
 @Controller('courses')
 @ApiBearerAuth()
