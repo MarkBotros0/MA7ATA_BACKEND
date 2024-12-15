@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UseGuards
 } from '@nestjs/common';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
@@ -19,6 +18,9 @@ import { AuthTokens } from './types/auth-tokens.type';
 import { LoginDto } from './dto/login.dto';
 import { TokenService } from './services/token.service';
 import { NormalUserGuard } from './guards/normal-user.guard';
+import { User } from '../users/entities/user.entity';
+import { UserView } from '../users/views/user.view';
+import { RefreshToken } from './decorators/refresh-token.decorator';
 
 @Controller('auth')
 @ApiSecurity('apiKey')
@@ -32,7 +34,7 @@ export class AuthController {
   ) {}
 
   @Post('send-otp')
-  async sendOtpCode(@Req() req, @Body() body: SendOTPDto) {
+  async sendOtpCode(@Body() body: SendOTPDto) {
     await this.otpService.sendOtp(body.phoneNumber);
     return {
       message: 'Otp code has been sent successfully.'
@@ -40,28 +42,42 @@ export class AuthController {
   }
 
   @Post('register')
-  async registerUser(@Req() req, @Body() body: RegisterDto) {
-    await this.authService.registerUser(body);
-    return { message: 'Successfully created new user' };
+  async registerUser(@Body() body: RegisterDto) {
+    const user: User = await this.authService.registerUser(body);
+    const tokens: AuthTokens = await this.tokenService.getTokens(
+      user.id,
+      user.phoneNumber
+    );
+    return {
+      tokens,
+      user: new UserView(user).render()
+    };
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Req() req, @Body() body: LoginDto) {
-    return this.authService.login(body);
+  async login(@Body() body: LoginDto) {
+    const user: User = await this.authService.login(body);
+    const tokens: AuthTokens = await this.tokenService.getTokens(
+      user.id,
+      user.phoneNumber
+    );
+    return {
+      tokens,
+      user: new UserView(user).render()
+    };
   }
 
   @Get('hello-world')
   @UseGuards(AccessTokenGuard, NormalUserGuard)
-  async helloWorld(@Req() req) {
+  async helloWorld() {
     return { message: 'success' };
   }
 
   @UseGuards(RefreshTokenGuard)
   @Post('logout')
-  @ApiBearerAuth()
-  async logout(@Req() req) {
-    const refreshToken = req.headers['authorization'].slice(7);
+  @HttpCode(HttpStatus.OK)
+  async logout(@RefreshToken() refreshToken: string) {
     await this.authService.logout(refreshToken);
     return {
       message: 'user has signed out successfully.'
@@ -70,9 +86,10 @@ export class AuthController {
 
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
-  @ApiBearerAuth()
-  async refreshTokens(@Req() req): Promise<AuthTokens> {
-    const refreshToken = req.headers['authorization'].slice(7);
+  @HttpCode(HttpStatus.OK)
+  async refreshTokens(
+    @RefreshToken() refreshToken: string
+  ): Promise<AuthTokens> {
     return this.tokenService.refreshTokens(refreshToken);
   }
 }
