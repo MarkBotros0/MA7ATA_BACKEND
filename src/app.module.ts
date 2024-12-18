@@ -7,6 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CoursesModule } from './courses/courses.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -19,15 +21,15 @@ import { CoursesModule } from './courses/courses.module';
     UsersModule,
     CoursesModule
   ],
-  controllers: [],
-  providers: []
+  controllers: [AppController],
+  providers: [AppService]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
     consumer
       .apply(ApiKeyMiddleware)
-      .exclude({ path: '/api/auth/send-otp', method: RequestMethod.POST })
+      .exclude({ path: '', method: RequestMethod.GET })
       .forRoutes('*');
   }
 }
