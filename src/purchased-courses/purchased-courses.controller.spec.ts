@@ -8,10 +8,12 @@ describe('PurchasedCoursesController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PurchasedCoursesController],
-      providers: [PurchasedCoursesService],
+      providers: [PurchasedCoursesService]
     }).compile();
 
-    controller = module.get<PurchasedCoursesController>(PurchasedCoursesController);
+    controller = module.get<PurchasedCoursesController>(
+      PurchasedCoursesController
+    );
   });
 
   it('should be defined', () => {
