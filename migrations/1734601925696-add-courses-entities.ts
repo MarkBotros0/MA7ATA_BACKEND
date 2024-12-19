@@ -7,12 +7,14 @@ export class AddCoursesEntities1734601925696 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE \`course_content\` (
         \`id\` int NOT NULL AUTO_INCREMENT, 
-        \`description\` text NULL, \`content_url\` varchar(255) NOT NULL, 
+        \`title\` varchar(100) NOT NULL, 
+        \`description\` text NULL, 
+        \`content_url\` varchar(255) NULL, 
         \`content_type\` enum ('article', 'video', 'quiz', 'game') NOT NULL DEFAULT 'video', 
         \`course_section_id\` int NULL, 
         \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), 
         \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), 
-        \`deletedAt\` datetime(6) NULL, \`title\` varchar(100) NOT NULL, 
+        \`deletedAt\` datetime(6) NULL, 
         PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
@@ -26,7 +28,7 @@ export class AddCoursesEntities1734601925696 implements MigrationInterface {
         PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
-      `CREATE TABLE \`course-progress\` (
+      `CREATE TABLE \`course_progress\` (
         \`id\` int NOT NULL AUTO_INCREMENT, 
         \`percentageCompleted\` float NOT NULL DEFAULT '0', 
         \`isCompleted\` tinyint NOT NULL DEFAULT 0, 
@@ -41,12 +43,13 @@ export class AddCoursesEntities1734601925696 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE \`course\` (
         \`id\` int NOT NULL AUTO_INCREMENT, 
+        \`title\` varchar(100) NOT NULL, 
         \`description\` text NULL, 
         \`price\` decimal(10,2) NOT NULL, 
         \`instructor_id\` int NOT NULL, 
         \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), 
         \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), 
-        \`deletedAt\` datetime(6) NULL, \`title\` varchar(100) NOT NULL, 
+        \`deletedAt\` datetime(6) NULL, 
         PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
