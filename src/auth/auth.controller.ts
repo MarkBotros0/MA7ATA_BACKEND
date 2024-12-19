@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -13,11 +12,9 @@ import { SendOTPDto } from './dto/send-otp.dto';
 import { OtpService } from './services/otp.service';
 import { RegisterDto } from './dto/register.dto';
 import { ApiBearerAuth, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { AccessTokenGuard } from './guards/access-token.guard';
 import { AuthTokens } from './types/auth-tokens.type';
 import { LoginDto } from './dto/login.dto';
 import { TokenService } from './services/token.service';
-import { NormalUserGuard } from './guards/normal-user.guard';
 import { User } from '../users/entities/user.entity';
 import { UserView } from '../users/views/user.view';
 import { RefreshToken } from './decorators/refresh-token.decorator';
