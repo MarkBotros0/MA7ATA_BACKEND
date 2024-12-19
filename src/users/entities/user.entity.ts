@@ -4,7 +4,6 @@ import { UserRole } from '../enums/user-roles.enum';
 import { Gender } from '../enums/gender.enum';
 import { BlacklistedRefreshToken } from '../../auth/entities/blacklisted-refresh-token.entity';
 import { Course } from '../../courses/entities/course.entity';
-import { CourseProgress } from '../../purchased-courses/entities/course-progress.entity';
 import { PurchasedCourse } from '../../purchased-courses/entities/purchased-course.entity';
 
 @Entity({ name: 'users' })

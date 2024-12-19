@@ -1,16 +1,16 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class InitialMigration1734632944001 implements MigrationInterface {
-  name = 'InitialMigration1734632944001';
+export class InitialMigration1734638765443 implements MigrationInterface {
+  name = 'InitialMigration1734638765443';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `CREATE TABLE \`blacklisted_refresh_tokens\` (
-          \`id\` int NOT NULL AUTO_INCREMENT, 
-          \`userId\` int NULL, 
-          \`expired_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), 
-          \`token\` text NOT NULL, 
-          PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
+        \`id\` int NOT NULL AUTO_INCREMENT, 
+        \`userId\` int NULL, 
+        \`expired_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), 
+        \`token\` text NOT NULL, 
+        PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
       `CREATE TABLE \`course_contents\` (
@@ -39,35 +39,33 @@ export class InitialMigration1734632944001 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE \`course_progress\` (
         \`id\` int NOT NULL AUTO_INCREMENT, 
+        \`is_completed\` tinyint NOT NULL DEFAULT 0, \`last_accessed\` timestamp NULL, 
+        \`seen_content\` json NULL, \`purchased_course\` int NULL, 
         \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), 
         \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), 
-        \`deletedAt\` datetime(6) NULL, 
-        \`percentage_completed\` float NOT NULL DEFAULT '0', 
-        \`is_completed\` tinyint NOT NULL DEFAULT 0, 
-        \`last_accessed\` timestamp NULL, 
-        \`seen_content\` json NULL, 
+        \`deletedAt\` datetime(6) NULL, \`percentage_completed\` float NOT NULL DEFAULT '0', 
+        UNIQUE INDEX \`REL_33fd21e165b72fbd7e66da7c8d\` (\`purchased_course\`), 
         PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
       `CREATE TABLE \`purchased_courses\` (
         \`id\` int NOT NULL AUTO_INCREMENT, 
+        \`userId\` int NULL, 
+        \`courseId\` int NULL, 
         \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), 
         \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), 
         \`deletedAt\` datetime(6) NULL, 
-        \`userId\` int NULL, 
-        \`courseId\` int NULL, 
         PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
       `CREATE TABLE \`courses\` (
         \`id\` int NOT NULL AUTO_INCREMENT, 
-        \`title\` varchar(100) NOT NULL, 
         \`description\` text NULL, 
         \`price\` decimal(10,2) NOT NULL, 
         \`instructor_id\` int NOT NULL, 
         \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), 
         \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), 
-        \`deletedAt\` datetime(6) NULL, 
+        \`deletedAt\` datetime(6) NULL, \`title\` varchar(100) NOT NULL, 
         PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(
@@ -76,10 +74,8 @@ export class InitialMigration1734632944001 implements MigrationInterface {
         \`phone_number\` varchar(15) NOT NULL, 
         \`fullname\` varchar(100) NULL, 
         \`email\` varchar(30) NULL, 
-        \`password\` text NULL, 
-        \`user_roles\` set ('Normal', 'Instructor', 'Admin') NOT NULL DEFAULT 'Normal', 
-        \`gender\` set ('Male', 'Female') NULL, 
-        \`date_of_birth\` date NULL, 
+        \`password\` text NULL, \`user_roles\` set ('Normal', 'Instructor', 'Admin') NOT NULL DEFAULT 'Normal', 
+        \`gender\` set ('Male', 'Female') NULL, \`date_of_birth\` date NULL, 
         \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), 
         \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), 
         \`deletedAt\` datetime(6) NULL, 
@@ -117,6 +113,13 @@ export class InitialMigration1734632944001 implements MigrationInterface {
         ON DELETE CASCADE ON UPDATE NO ACTION`
     );
     await queryRunner.query(
+      `ALTER TABLE \`course_progress\` 
+        ADD CONSTRAINT \`FK_33fd21e165b72fbd7e66da7c8d2\` 
+        FOREIGN KEY (\`purchased_course\`) 
+        REFERENCES \`purchased_courses\`(\`id\`) 
+        ON DELETE CASCADE ON UPDATE NO ACTION`
+    );
+    await queryRunner.query(
       `ALTER TABLE \`purchased_courses\` 
         ADD CONSTRAINT \`FK_e662f787e93fc7862f0438d1949\` 
         FOREIGN KEY (\`userId\`) 
@@ -150,6 +153,9 @@ export class InitialMigration1734632944001 implements MigrationInterface {
       `ALTER TABLE \`purchased_courses\` DROP FOREIGN KEY \`FK_e662f787e93fc7862f0438d1949\``
     );
     await queryRunner.query(
+      `ALTER TABLE \`course_progress\` DROP FOREIGN KEY \`FK_33fd21e165b72fbd7e66da7c8d2\``
+    );
+    await queryRunner.query(
       `ALTER TABLE \`course_sections\` DROP FOREIGN KEY \`FK_348f9a7c13a6b413f10d2a1ef1a\``
     );
     await queryRunner.query(
@@ -165,6 +171,9 @@ export class InitialMigration1734632944001 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE \`users\``);
     await queryRunner.query(`DROP TABLE \`courses\``);
     await queryRunner.query(`DROP TABLE \`purchased_courses\``);
+    await queryRunner.query(
+      `DROP INDEX \`REL_33fd21e165b72fbd7e66da7c8d\` ON \`course_progress\``
+    );
     await queryRunner.query(`DROP TABLE \`course_progress\``);
     await queryRunner.query(`DROP TABLE \`course_sections\``);
     await queryRunner.query(`DROP TABLE \`course_contents\``);

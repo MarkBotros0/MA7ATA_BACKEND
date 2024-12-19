@@ -5,11 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CourseProgress } from './entities/course-progress.entity';
 import { PurchasedCourse } from './entities/purchased-course.entity';
 import { CoursesModule } from '../courses/courses.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CourseProgress, PurchasedCourse]),
-    CoursesModule
+    CoursesModule,
+    UsersModule
   ],
   controllers: [PurchasedCoursesController],
   providers: [PurchasedCoursesService]

@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../shared/entities/base.entity';
 import { PurchasedCourse } from './purchased-course.entity';
 
@@ -11,6 +11,7 @@ export class CourseProgress extends BaseEntity {
       onDelete: 'CASCADE'
     }
   )
+  @JoinColumn({ name: 'purchased_course' })
   purchasedCourse: PurchasedCourse;
 
   @Column({ type: 'float', default: 0.0, name: 'percentage_completed' })
