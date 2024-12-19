@@ -7,6 +7,7 @@ import { BlacklistedRefreshToken } from './src/auth/entities/blacklisted-refresh
 import { Course } from './src/courses/entities/course.entity';
 import { CourseSection } from './src/courses/entities/course-module.entity';
 import { CourseContent } from './src/courses/entities/course-content.entity';
+import { CourseProgress } from './src/courses/entities/course-progress.entity';
 
 config();
 
@@ -26,7 +27,8 @@ export default new DataSource({
     BlacklistedRefreshToken,
     Course,
     CourseSection,
-    CourseContent
+    CourseContent,
+    CourseProgress
   ],
   synchronize: false,
   logging: true

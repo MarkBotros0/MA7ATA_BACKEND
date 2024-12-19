@@ -4,6 +4,7 @@ import { UserRole } from '../enums/user-roles.enum';
 import { Gender } from '../enums/gender.enum';
 import { BlacklistedRefreshToken } from '../../auth/entities/blacklisted-refresh-token.entity';
 import { Course } from '../../courses/entities/course.entity';
+import { CourseProgress } from '../../courses/entities/course-progress.entity';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -58,6 +59,9 @@ export class User extends BaseEntity {
   })
   blacklistedRefreshTokens: BlacklistedRefreshToken[];
 
-  @OneToMany(() => Course, (course) => course.teacher, { cascade: true })
+  @OneToMany(() => Course, (course) => course.instructor)
   courses: Course[];
+
+  @OneToMany(() => CourseProgress, (progress) => progress.user)
+  progress: CourseProgress[];
 }
