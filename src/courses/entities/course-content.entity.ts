@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../shared/entities/base.entity';
 import { CourseContentType } from '../enums/course-type.enum';
-import { CourseSection } from './course-module.entity';
+import { CourseSection } from './course-section.entity';
 
-@Entity()
+@Entity({ name: 'course_contents' })
 export class CourseContent extends BaseEntity {
   @Column({
     type: 'varchar',

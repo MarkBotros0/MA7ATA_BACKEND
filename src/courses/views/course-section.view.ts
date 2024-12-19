@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { CourseSection } from '../entities/course-module.entity';
+import { CourseSection } from '../entities/course-section.entity';
 import { CourseContentView } from './course-content.view';
 
 export class CourseSectionView {

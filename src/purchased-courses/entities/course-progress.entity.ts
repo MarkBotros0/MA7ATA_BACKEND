@@ -1,22 +1,27 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
-import { Course } from '../../courses/entities/course.entity';
-import { User } from '../../users/entities/user.entity';
+import { Entity, Column, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../shared/entities/base.entity';
+import { PurchasedCourse } from './purchased-course.entity';
 
 @Entity('course_progress')
 export class CourseProgress extends BaseEntity {
-  @ManyToOne(() => User, (user) => user.progress, { onDelete: 'CASCADE' })
-  user: User;
+  @OneToOne(
+    () => PurchasedCourse,
+    (purchasedCourse) => purchasedCourse.progress,
+    {
+      onDelete: 'CASCADE'
+    }
+  )
+  purchasedCourse: PurchasedCourse;
 
-  @ManyToOne(() => Course, (course) => course.progress, { onDelete: 'CASCADE' })
-  course: Course;
-
-  @Column({ type: 'float', default: 0.0 })
+  @Column({ type: 'float', default: 0.0, name: 'percentage_completed' })
   percentageCompleted: number;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: false, name: 'is_completed' })
   isCompleted: boolean;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp', nullable: true, name: 'last_accessed' })
   lastAccessed: Date;
+
+  @Column({ type: 'json', nullable: true, name: 'seen_content' })
+  seenContent: number[];
 }

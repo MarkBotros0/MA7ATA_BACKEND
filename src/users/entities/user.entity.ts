@@ -5,6 +5,7 @@ import { Gender } from '../enums/gender.enum';
 import { BlacklistedRefreshToken } from '../../auth/entities/blacklisted-refresh-token.entity';
 import { Course } from '../../courses/entities/course.entity';
 import { CourseProgress } from '../../purchased-courses/entities/course-progress.entity';
+import { PurchasedCourse } from '../../purchased-courses/entities/purchased-course.entity';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -62,6 +63,6 @@ export class User extends BaseEntity {
   @OneToMany(() => Course, (course) => course.instructor)
   courses: Course[];
 
-  @OneToMany(() => CourseProgress, (progress) => progress.user)
-  progress: CourseProgress[];
+  @OneToMany(() => PurchasedCourse, (purchasedCourse) => purchasedCourse.user)
+  purchasedCourses: PurchasedCourse[];
 }

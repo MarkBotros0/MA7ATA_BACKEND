@@ -5,9 +5,10 @@ import { User } from './src/users/entities/user.entity';
 import { OtpCode } from './src/auth/entities/otp-code.entity';
 import { BlacklistedRefreshToken } from './src/auth/entities/blacklisted-refresh-token.entity';
 import { Course } from './src/courses/entities/course.entity';
-import { CourseSection } from './src/courses/entities/course-module.entity';
+import { CourseSection } from './src/courses/entities/course-section.entity';
 import { CourseContent } from './src/courses/entities/course-content.entity';
 import { CourseProgress } from './src/purchased-courses/entities/course-progress.entity';
+import { PurchasedCourse } from './src/purchased-courses/entities/purchased-course.entity';
 
 config();
 
@@ -28,7 +29,8 @@ export default new DataSource({
     Course,
     CourseSection,
     CourseContent,
-    CourseProgress
+    CourseProgress,
+    PurchasedCourse
   ],
   synchronize: false,
   logging: true

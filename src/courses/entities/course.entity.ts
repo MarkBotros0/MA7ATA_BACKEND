@@ -1,10 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../shared/entities/base.entity';
-import { CourseSection } from './course-module.entity';
+import { CourseSection } from './course-section.entity';
 import { User } from '../../users/entities/user.entity';
-import { CourseProgress } from '../../purchased-courses/entities/course-progress.entity';
+import { PurchasedCourse } from '../../purchased-courses/entities/purchased-course.entity';
 
-@Entity()
+@Entity({ name: 'courses' })
 export class Course extends BaseEntity {
   @Column({
     type: 'varchar',
@@ -34,6 +34,6 @@ export class Course extends BaseEntity {
   )
   courseSections: CourseSection[];
 
-  @OneToMany(() => CourseProgress, (progress) => progress.course)
-  progress: CourseProgress[];
+  @OneToMany(() => PurchasedCourse, (purchasedCourse) => purchasedCourse.course)
+  purchasedCourses: PurchasedCourse[];
 }

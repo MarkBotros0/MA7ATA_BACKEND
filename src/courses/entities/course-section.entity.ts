@@ -3,7 +3,7 @@ import { BaseEntity } from '../../shared/entities/base.entity';
 import { Course } from './course.entity';
 import { CourseContent } from './course-content.entity';
 
-@Entity()
+@Entity({ name: 'course_sections' })
 export class CourseSection extends BaseEntity {
   @Column({
     type: 'varchar',

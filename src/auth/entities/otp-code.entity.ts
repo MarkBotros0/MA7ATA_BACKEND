@@ -6,7 +6,7 @@ import {
   UpdateDateColumn
 } from 'typeorm';
 
-@Entity({ name: 'otp_code' })
+@Entity({ name: 'otp_codes' })
 export class OtpCode {
   @PrimaryColumn({ name: 'phone_number', type: 'varchar', length: 15 })
   phoneNumber: string;

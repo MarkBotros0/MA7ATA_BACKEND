@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Course } from '../entities/course.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CourseSection } from '../entities/course-module.entity';
+import { CourseSection } from '../entities/course-section.entity';
 import { CoursesService } from './courses.service';
 import { CreateCourseSectionDto } from '../dto/create-course-section.dto';
 import { UpdateCourseSectionDto } from '../dto/update-course-section.dto';
