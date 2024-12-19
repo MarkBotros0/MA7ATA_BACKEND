@@ -20,7 +20,8 @@ export class CourseContent extends BaseEntity {
   @Column({
     type: 'varchar',
     length: 255,
-    name: 'content_url'
+    name: 'content_url',
+    nullable: true
   })
   contentUrl: string;
 

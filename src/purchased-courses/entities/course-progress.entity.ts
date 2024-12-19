@@ -3,7 +3,7 @@ import { Course } from '../../courses/entities/course.entity';
 import { User } from '../../users/entities/user.entity';
 import { BaseEntity } from '../../shared/entities/base.entity';
 
-@Entity('course-progress')
+@Entity('course_progress')
 export class CourseProgress extends BaseEntity {
   @ManyToOne(() => User, (user) => user.progress, { onDelete: 'CASCADE' })
   user: User;
