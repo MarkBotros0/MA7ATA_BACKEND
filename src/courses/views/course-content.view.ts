@@ -2,7 +2,10 @@ import * as _ from 'lodash';
 import { CourseContent } from '../entities/course-content.entity';
 
 export class CourseContentView {
-  constructor(private readonly data: CourseContent | CourseContent[]) {}
+  constructor(
+    private readonly data: CourseContent | CourseContent[],
+    private isPublic: boolean = true
+  ) {}
 
   render(): any {
     if (Array.isArray(this.data)) {
@@ -18,12 +21,12 @@ export class CourseContentView {
       'id',
       'title',
       'description',
-      'contentUrl',
       'contentType'
     ]);
 
     return {
-      ...courseContentData
+      ...courseContentData,
+      ...(this.isPublic ? {} : { contentUrl: courseContent.contentUrl })
     };
   }
 }

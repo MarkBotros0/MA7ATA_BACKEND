@@ -4,7 +4,10 @@ import { CourseSectionView } from './course-section.view';
 import { UserView } from '../../users/views/user.view';
 
 export class CourseView {
-  constructor(private readonly data: Course | Course[]) {}
+  constructor(
+    private readonly data: Course | Course[],
+    private isPublic: boolean = true
+  ) {}
 
   render() {
     if (Array.isArray(this.data)) {
@@ -19,9 +22,10 @@ export class CourseView {
     return {
       ...courseData,
       courseSections: new CourseSectionView(
-        course.courseSections || []
+        course.courseSections || [],
+        this.isPublic
       ).render(),
-      teacher: new UserView(course.teacher).render()
+      instructor: new UserView(course.instructor).render()
     };
   }
 }

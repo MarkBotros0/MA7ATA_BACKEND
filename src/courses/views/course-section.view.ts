@@ -3,7 +3,10 @@ import { CourseSection } from '../entities/course-module.entity';
 import { CourseContentView } from './course-content.view';
 
 export class CourseSectionView {
-  constructor(private readonly data: CourseSection | CourseSection[]) {}
+  constructor(
+    private readonly data: CourseSection | CourseSection[],
+    private isPublic: boolean = true
+  ) {}
 
   render(): any {
     if (Array.isArray(this.data)) {
@@ -24,7 +27,8 @@ export class CourseSectionView {
     return {
       ...courseContentData,
       courseContents: new CourseContentView(
-        courseSection.courseContents || []
+        courseSection.courseContents || [],
+        this.isPublic
       ).render()
     };
   }
