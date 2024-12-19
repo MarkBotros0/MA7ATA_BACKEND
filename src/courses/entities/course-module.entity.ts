@@ -25,8 +25,7 @@ export class CourseSection extends BaseEntity {
 
   @OneToMany(
     () => CourseContent,
-    (courseContent) => courseContent.courseSection,
-    { cascade: true }
+    (courseContent) => courseContent.courseSection
   )
   courseContents: CourseContent[];
 }
