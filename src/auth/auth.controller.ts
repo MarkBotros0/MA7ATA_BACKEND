@@ -68,12 +68,6 @@ export class AuthController {
     };
   }
 
-  @Get('hello-world')
-  @UseGuards(AccessTokenGuard, NormalUserGuard)
-  async helloWorld() {
-    return { message: 'success' };
-  }
-
   @UseGuards(RefreshTokenGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)

@@ -7,19 +7,14 @@ import { CourseSection } from './entities/course-module.entity';
 import { CourseSectionsService } from './services/course-sections.service';
 import { CoursesController } from './courses.controller';
 import { UsersModule } from '../users/users.module';
-import { CourseProgress } from '../purchased-courses/entities/course-progress.entity';
+import { CourseContentsService } from './services/course-contents.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      Course,
-      CourseSection,
-      CourseContent,
-      CourseProgress
-    ]),
+    TypeOrmModule.forFeature([Course, CourseSection, CourseContent]),
     UsersModule
   ],
   controllers: [CoursesController],
-  providers: [CoursesService, CourseSectionsService]
+  providers: [CoursesService, CourseSectionsService, CourseContentsService]
 })
 export class CoursesModule {}

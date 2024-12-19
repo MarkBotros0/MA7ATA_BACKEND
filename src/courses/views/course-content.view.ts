@@ -4,7 +4,7 @@ import { CourseContent } from '../entities/course-content.entity';
 export class CourseContentView {
   constructor(
     private readonly data: CourseContent | CourseContent[],
-    private isPublic: boolean = true
+    private isAuthenticated: boolean = true
   ) {}
 
   render(): any {
@@ -26,7 +26,7 @@ export class CourseContentView {
 
     return {
       ...courseContentData,
-      ...(this.isPublic ? {} : { contentUrl: courseContent.contentUrl })
+      ...(this.isAuthenticated ? { contentUrl: courseContent.contentUrl } : {})
     };
   }
 }

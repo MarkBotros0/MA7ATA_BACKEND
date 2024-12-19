@@ -12,6 +12,11 @@ export class CreateCourseDto {
   @ApiProperty({ required: false })
   description: string;
 
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty()
+  price: number;
+
   @IsOptional()
   @IsNumber()
   @ApiProperty({ required: false, description: 'Required on only if Admin' })

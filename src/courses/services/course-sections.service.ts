@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateCourseDto } from '../dto/update-course.dto';
 import { Course } from '../entities/course.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CourseSection } from '../entities/course-module.entity';
 import { CoursesService } from './courses.service';
 import { CreateCourseSectionDto } from '../dto/create-course-section.dto';
+import { UpdateCourseSectionDto } from '../dto/update-course-section.dto';
 
 @Injectable()
 export class CourseSectionsService {
@@ -42,39 +42,35 @@ export class CourseSectionsService {
     });
   }
 
-  async findOne(id: number, instructorId?: number): Promise<CourseSection> {
+  async findOne(id: number): Promise<CourseSection> {
     const courseSection: CourseSection =
       await this.courseSectionRepository.findOne({
         relations: ['courseContents', 'course.instructor'],
         where: { id }
       });
     if (!courseSection) {
-      throw new NotFoundException(`Course Module with id: ${id} not found`);
+      throw new NotFoundException(`Course Section with id: ${id} not found`);
     }
-    this.coursesService.checkCourseOwnership(
-      instructorId,
-      courseSection.course
-    );
     return courseSection;
   }
 
   async update(
     id: number,
-    updateCourseDto: UpdateCourseDto,
+    updateCourseSectionDto: UpdateCourseSectionDto,
     instructorId?: number
   ): Promise<CourseSection> {
-    const courseSection: CourseSection = await this.findOne(id, instructorId);
+    const courseSection: CourseSection = await this.findOne(id);
     this.coursesService.checkCourseOwnership(
       instructorId,
       courseSection.course
     );
-    Object.assign(courseSection, updateCourseDto);
+    Object.assign(courseSection, updateCourseSectionDto);
     await this.courseSectionRepository.save(courseSection);
     return this.findOne(courseSection.id);
   }
 
   async remove(id: number, instructorId?: number): Promise<void> {
-    const courseSection: CourseSection = await this.findOne(id, instructorId);
+    const courseSection: CourseSection = await this.findOne(id);
     this.coursesService.checkCourseOwnership(
       instructorId,
       courseSection.course
