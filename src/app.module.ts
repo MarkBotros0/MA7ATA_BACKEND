@@ -9,6 +9,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { CoursesModule } from './courses/courses.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PurchasedCoursesModule } from './purchased-courses/purchased-courses.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { AppService } from './app.service';
     DatabaseModule,
     AuthModule,
     UsersModule,
-    CoursesModule
+    CoursesModule,
+    PurchasedCoursesModule
   ],
   controllers: [AppController],
   providers: [AppService]
