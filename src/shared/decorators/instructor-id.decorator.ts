@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { UserRole } from '../../users/enums/user-roles.enum';
 
-export const TeacherId = createParamDecorator(
+export const InstructorId = createParamDecorator(
   (
     data: { requiredForAdmin?: boolean } = {},
     ctx: ExecutionContext
@@ -14,7 +14,7 @@ export const TeacherId = createParamDecorator(
 
     const request = ctx.switchToHttp().getRequest();
 
-    if (request.user?.userRoles.includes(UserRole.TEACHER)) {
+    if (request.user?.userRoles.includes(UserRole.INSTRUCTOR)) {
       return request.user.id;
     }
 
@@ -22,13 +22,13 @@ export const TeacherId = createParamDecorator(
       return undefined;
     }
 
-    const teacherIdFromBody = request.body?.teacherId;
-    if (teacherIdFromBody) {
-      return teacherIdFromBody;
+    const instructorIdFromBody = request.body?.instructorId;
+    if (instructorIdFromBody) {
+      return instructorIdFromBody;
     }
 
     throw new BadRequestException(
-      'Teacher role must be signed in or admin must add teacherId in the body.'
+      'Instructor role must be signed in or admin must add instructorId in the body.'
     );
   }
 );

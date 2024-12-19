@@ -38,20 +38,20 @@ export class UsersService {
     return user;
   }
 
-  async findTeacherById(id: number): Promise<User> {
-    const teacher: User = await this.usersRepository
+  async findInstructorById(id: number): Promise<User> {
+    const instructor: User = await this.usersRepository
       .createQueryBuilder('user')
       .where('FIND_IN_SET(:role, user.userRoles) > 0', {
-        role: UserRole.TEACHER
+        role: UserRole.INSTRUCTOR
       })
       .andWhere('user.id = :id', { id })
       .getOne();
 
-    if (!teacher) {
-      throw new NotFoundException(`Teacher with id: ${id} is not found`);
+    if (!instructor) {
+      throw new NotFoundException(`Instructor with id: ${id} is not found`);
     }
 
-    return teacher;
+    return instructor;
   }
 
   async create(
@@ -75,23 +75,23 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async addTeacherRoleToUser(userId: number) {
+  async addInstructorRoleToUser(userId: number) {
     const user: User = await this.findOneById(userId);
-    user.userRoles.push(UserRole.TEACHER);
+    user.userRoles.push(UserRole.INSTRUCTOR);
     return this.usersRepository.save(user);
   }
 
-  async getTeachersForAdmin(): Promise<User[]> {
+  async getInstructorsForAdmin(): Promise<User[]> {
     return this.usersRepository.find({
-      where: { userRoles: UserRole.TEACHER }
+      where: { userRoles: UserRole.INSTRUCTOR }
     });
   }
 
-  async isTeacher(user: number | User): Promise<boolean> {
+  async isInstructor(user: number | User): Promise<boolean> {
     if (typeof user === 'number') {
       const foundUser: User = await this.findOneById(user);
-      return foundUser.userRoles.includes(UserRole.TEACHER);
+      return foundUser.userRoles.includes(UserRole.INSTRUCTOR);
     }
-    return user.userRoles.includes(UserRole.TEACHER);
+    return user.userRoles.includes(UserRole.INSTRUCTOR);
   }
 }

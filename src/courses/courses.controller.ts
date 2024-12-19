@@ -15,13 +15,13 @@ import { Course } from './entities/course.entity';
 import { CourseView } from './views/course.view';
 import { ApiBearerAuth, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from '../auth/guards/access-token.guard';
-import { AdminOrTeacherGuard } from '../auth/guards/admin-or-teacher.guard';
+import { AdminOrInstructorGuard } from '../auth/guards/admin-or-instructor.guard';
 import { CreateCourseSectionDto } from './dto/create-course-section.dto';
 import { CourseSection } from './entities/course-module.entity';
 import { CourseSectionView } from './views/course-section.view';
 import { CourseSectionsService } from './services/course-sections.service';
 import { UpdateCourseSectionDto } from './dto/update-course-section.dto';
-import { TeacherId } from '../shared/decorators/teacher-id.decorator';
+import { InstructorId } from '../shared/decorators/instructor-id.decorator';
 
 @Controller('courses')
 @ApiBearerAuth()
@@ -33,15 +33,15 @@ export class CoursesController {
     private readonly courseSectionsService: CourseSectionsService
   ) {}
 
-  @UseGuards(AccessTokenGuard, AdminOrTeacherGuard)
+  @UseGuards(AccessTokenGuard, AdminOrInstructorGuard)
   @Post()
   async createCourse(
-    @TeacherId() teacherId: number,
+    @InstructorId() instructorId: number,
     @Body() createCourseDto: CreateCourseDto
   ) {
     const course: Course = await this.coursesService.create(
       createCourseDto,
-      teacherId
+      instructorId
     );
     return new CourseView(course).render();
   }
@@ -60,7 +60,7 @@ export class CoursesController {
     return new CourseView(course).render();
   }
 
-  @UseGuards(AccessTokenGuard, AdminOrTeacherGuard)
+  @UseGuards(AccessTokenGuard, AdminOrInstructorGuard)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -73,17 +73,17 @@ export class CoursesController {
     return new CourseView(course).render();
   }
 
-  @UseGuards(AccessTokenGuard, AdminOrTeacherGuard)
+  @UseGuards(AccessTokenGuard, AdminOrInstructorGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.coursesService.remove(+id);
     return { message: 'course deleted successfully' };
   }
 
-  @UseGuards(AccessTokenGuard, AdminOrTeacherGuard)
+  @UseGuards(AccessTokenGuard, AdminOrInstructorGuard)
   @Post(':courseId/course-sections')
   async createCourseSection(
-    @TeacherId({ requiredForAdmin: false }) teacherId: number,
+    @InstructorId({ requiredForAdmin: false }) instructorId: number,
     @Param('courseId') courseId: number,
     @Body()
     createCourseSectionDto: CreateCourseSectionDto
@@ -92,12 +92,12 @@ export class CoursesController {
       await this.courseSectionsService.create(
         courseId,
         createCourseSectionDto,
-        teacherId
+        instructorId
       );
     return new CourseSectionView(courseSection).render();
   }
 
-  @UseGuards(AccessTokenGuard, AdminOrTeacherGuard)
+  @UseGuards(AccessTokenGuard, AdminOrInstructorGuard)
   @Get(':courseId/course-sections')
   async getCourseSectionsByCourseId(@Param('courseId') courseId: number) {
     const courseSections: CourseSection[] =
@@ -105,31 +105,31 @@ export class CoursesController {
     return new CourseSectionView(courseSections).render();
   }
 
-  @UseGuards(AccessTokenGuard, AdminOrTeacherGuard)
+  @UseGuards(AccessTokenGuard, AdminOrInstructorGuard)
   @Get('course-sections/:courseSectionId')
   async getCourseSectionById(
-    @TeacherId() teacherId: number,
+    @InstructorId() instructorId: number,
     @Param('courseSectionId') courseSectionId: number
   ) {
     const courseSection: CourseSection =
-      await this.courseSectionsService.findOne(courseSectionId, teacherId);
+      await this.courseSectionsService.findOne(courseSectionId, instructorId);
     return new CourseSectionView(courseSection).render();
   }
 
-  @UseGuards(AccessTokenGuard, AdminOrTeacherGuard)
+  @UseGuards(AccessTokenGuard, AdminOrInstructorGuard)
   @Delete('course-sections/:courseSectionId')
   async deleteCourseSectionById(
-    @TeacherId() teacherId: number,
+    @InstructorId() instructorId: number,
     @Param('courseSectionId') courseSectionId: number
   ) {
-    await this.courseSectionsService.remove(courseSectionId, teacherId);
+    await this.courseSectionsService.remove(courseSectionId, instructorId);
     return { message: 'Course Section deleted successfully' };
   }
 
-  @UseGuards(AccessTokenGuard, AdminOrTeacherGuard)
+  @UseGuards(AccessTokenGuard, AdminOrInstructorGuard)
   @Patch('course-sections/:courseSectionId')
   async updateCourseSection(
-    @TeacherId({ requiredForAdmin: false }) teacherId: number | undefined,
+    @InstructorId({ requiredForAdmin: false }) instructorId: number | undefined,
     @Param('courseSectionId')
     courseSectionId: number,
     @Body() updateCourseSectionDto: UpdateCourseSectionDto
@@ -137,7 +137,7 @@ export class CoursesController {
     await this.courseSectionsService.update(
       courseSectionId,
       updateCourseSectionDto,
-      teacherId
+      instructorId
     );
     return { message: 'Course Section deleted successfully' };
   }

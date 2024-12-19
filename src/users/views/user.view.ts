@@ -17,7 +17,7 @@ export class UserView {
 
     const rolePriority: UserRole[] = [
       UserRole.ADMIN,
-      UserRole.TEACHER,
+      UserRole.INSTRUCTOR,
       UserRole.NORMAL
     ];
 

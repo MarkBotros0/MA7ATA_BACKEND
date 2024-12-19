@@ -15,5 +15,5 @@ export class CreateCourseDto {
   @IsOptional()
   @IsNumber()
   @ApiProperty({ required: false, description: 'Required on only if Admin' })
-  teacherId: number;
+  instructorId: number;
 }

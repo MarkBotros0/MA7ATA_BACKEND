@@ -5,7 +5,7 @@ import { InjectEntityManager } from '@nestjs/typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Injectable()
-export class AdminOrTeacherGuard implements CanActivate {
+export class AdminOrInstructorGuard implements CanActivate {
   constructor(
     @InjectEntityManager()
     private readonly entityManager: EntityManager
@@ -22,9 +22,9 @@ export class AdminOrTeacherGuard implements CanActivate {
         return true;
       }
 
-      if (roles.includes(UserRole.TEACHER)) {
-        request.teacher = await this.entityManager.findOne(User, {
-          where: { id: userId, userRoles: UserRole.TEACHER }
+      if (roles.includes(UserRole.INSTRUCTOR)) {
+        request.instructor = await this.entityManager.findOne(User, {
+          where: { id: userId, userRoles: UserRole.INSTRUCTOR }
         });
         request.isAdmin = false;
         return true;

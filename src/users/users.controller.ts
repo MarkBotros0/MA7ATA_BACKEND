@@ -14,16 +14,16 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @UseGuards(AccessTokenGuard, AdminGuard)
-  @Post(':userId/teacher')
-  async addTeacherRoleToUser(@Param('userId') userId: number) {
-    await this.usersService.addTeacherRoleToUser(userId);
-    return { message: 'Teacher role added to user' };
+  @Post(':userId/instructor')
+  async addInstructorRoleToUser(@Param('userId') userId: number) {
+    await this.usersService.addInstructorRoleToUser(userId);
+    return { message: 'Instructor role added to user' };
   }
 
   @UseGuards(AccessTokenGuard, AdminGuard)
-  @Get('teachers')
-  async addAllTeachers() {
-    const users: User[] = await this.usersService.getTeachersForAdmin();
+  @Get('instructors')
+  async addAllInstructors() {
+    const users: User[] = await this.usersService.getInstructorsForAdmin();
     return new UserView(users).render();
   }
 }

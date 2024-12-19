@@ -18,11 +18,11 @@ export class CourseSectionsService {
   async create(
     courseId: number,
     createCourseSectionDto: CreateCourseSectionDto,
-    teacherId: number
+    instructorId: number
   ): Promise<CourseSection> {
     const course: Course = await this.coursesService.findOne(courseId);
 
-    this.coursesService.checkCourseOwnership(teacherId, course);
+    this.coursesService.checkCourseOwnership(instructorId, course);
 
     const courseSection: CourseSection = this.courseSectionRepository.create();
     Object.assign(courseSection, createCourseSectionDto);
@@ -42,34 +42,43 @@ export class CourseSectionsService {
     });
   }
 
-  async findOne(id: number, teacherId?: number): Promise<CourseSection> {
+  async findOne(id: number, instructorId?: number): Promise<CourseSection> {
     const courseSection: CourseSection =
       await this.courseSectionRepository.findOne({
-        relations: ['courseContents', 'course.teacher'],
+        relations: ['courseContents', 'course.instructor'],
         where: { id }
       });
     if (!courseSection) {
       throw new NotFoundException(`Course Module with id: ${id} not found`);
     }
-    this.coursesService.checkCourseOwnership(teacherId, courseSection.course);
+    this.coursesService.checkCourseOwnership(
+      instructorId,
+      courseSection.course
+    );
     return courseSection;
   }
 
   async update(
     id: number,
     updateCourseDto: UpdateCourseDto,
-    teacherId?: number
+    instructorId?: number
   ): Promise<CourseSection> {
-    const courseSection: CourseSection = await this.findOne(id, teacherId);
-    this.coursesService.checkCourseOwnership(teacherId, courseSection.course);
+    const courseSection: CourseSection = await this.findOne(id, instructorId);
+    this.coursesService.checkCourseOwnership(
+      instructorId,
+      courseSection.course
+    );
     Object.assign(courseSection, updateCourseDto);
     await this.courseSectionRepository.save(courseSection);
     return this.findOne(courseSection.id);
   }
 
-  async remove(id: number, teacherId?: number): Promise<void> {
-    const courseSection: CourseSection = await this.findOne(id, teacherId);
-    this.coursesService.checkCourseOwnership(teacherId, courseSection.course);
+  async remove(id: number, instructorId?: number): Promise<void> {
+    const courseSection: CourseSection = await this.findOne(id, instructorId);
+    this.coursesService.checkCourseOwnership(
+      instructorId,
+      courseSection.course
+    );
     await this.courseSectionRepository.remove(courseSection);
   }
 }

@@ -21,28 +21,29 @@ export class CoursesService {
 
   async create(
     createCourseDto: CreateCourseDto,
-    teacherId: number
+    instructorId: number
   ): Promise<Course> {
-    const teacher: User = await this.usersService.findTeacherById(teacherId);
+    const instructor: User =
+      await this.usersService.findInstructorById(instructorId);
 
     const course: Course = this.courseRepository.create();
     Object.assign(course, createCourseDto);
 
     return this.courseRepository.save({
       ...course,
-      teacher
+      instructor
     });
   }
 
   async findAll(): Promise<Course[]> {
     return this.courseRepository.find({
-      relations: ['courseSections.courseContents', 'teacher']
+      relations: ['courseSections.courseContents', 'instructor']
     });
   }
 
   async findOne(id: number): Promise<Course> {
     const course: Course = await this.courseRepository.findOne({
-      relations: ['courseSections.courseContents', 'teacher'],
+      relations: ['courseSections.courseContents', 'instructor'],
       where: { id }
     });
     if (!course) {
@@ -54,25 +55,25 @@ export class CoursesService {
   async update(
     id: number,
     updateCourseDto: UpdateCourseDto,
-    teacherId?: number
+    instructorId?: number
   ): Promise<Course> {
     const course: Course = await this.findOne(id);
-    this.checkCourseOwnership(teacherId, course);
+    this.checkCourseOwnership(instructorId, course);
     Object.assign(course, updateCourseDto);
     await this.courseRepository.save(course);
     return this.findOne(course.id);
   }
 
-  async remove(id: number, teacherId?: number): Promise<void> {
+  async remove(id: number, instructorId?: number): Promise<void> {
     const course: Course = await this.findOne(id);
-    this.checkCourseOwnership(teacherId, course);
+    this.checkCourseOwnership(instructorId, course);
     await this.courseRepository.remove(course);
   }
 
-  checkCourseOwnership(teacherId: number, course: Course): void {
-    if (teacherId && teacherId != course.teacher.id) {
+  checkCourseOwnership(instructorId: number, course: Course): void {
+    if (instructorId && instructorId != course.instructor.id) {
       throw new BadRequestException(
-        `Teacher must be the owner of this course to update, edit, delete.`
+        `Instructor must be the owner of this course to update, edit, delete.`
       );
     }
   }
