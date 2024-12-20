@@ -8,12 +8,12 @@ import {
 } from '@nestjs/common';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { AuthService } from './services/auth.service';
-import { SendOTPDto } from './dto/send-otp.dto';
+import { SendOTPDto } from './dtos/send-otp.dto';
 import { OtpService } from './services/otp.service';
-import { RegisterDto } from './dto/register.dto';
+import { RegisterDto } from './dtos/register.dto';
 import { ApiBearerAuth, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { AuthTokens } from './types/auth-tokens.type';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto } from './dtos/login.dto';
 import { TokenService } from './services/token.service';
 import { User } from '../users/entities/user.entity';
 import { UserView } from '../users/views/user.view';

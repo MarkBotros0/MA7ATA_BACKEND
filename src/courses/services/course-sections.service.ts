@@ -4,8 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CourseSection } from '../entities/course-section.entity';
 import { CoursesService } from './courses.service';
-import { CreateCourseSectionDto } from '../dto/create-course-section.dto';
-import { UpdateCourseSectionDto } from '../dto/update-course-section.dto';
+import { CreateCourseSectionDto } from '../dtos/create-course-section.dto';
+import { UpdateCourseSectionDto } from '../dtos/update-course-section.dto';
 
 @Injectable()
 export class CourseSectionsService {

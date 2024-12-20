@@ -9,24 +9,24 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { CoursesService } from './services/courses.service';
-import { CreateCourseDto } from './dto/create-course.dto';
-import { UpdateCourseDto } from './dto/update-course.dto';
+import { CreateCourseDto } from './dtos/create-course.dto';
+import { UpdateCourseDto } from './dtos/update-course.dto';
 import { Course } from './entities/course.entity';
 import { CourseView } from './views/course.view';
 import { ApiBearerAuth, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from '../auth/guards/access-token.guard';
 import { AdminOrInstructorGuard } from '../auth/guards/admin-or-instructor.guard';
-import { CreateCourseSectionDto } from './dto/create-course-section.dto';
+import { CreateCourseSectionDto } from './dtos/create-course-section.dto';
 import { CourseSection } from './entities/course-section.entity';
 import { CourseSectionView } from './views/course-section.view';
 import { CourseSectionsService } from './services/course-sections.service';
-import { UpdateCourseSectionDto } from './dto/update-course-section.dto';
+import { UpdateCourseSectionDto } from './dtos/update-course-section.dto';
 import { InstructorId } from '../shared/decorators/instructor-id.decorator';
-import { CreateCourseContentDto } from './dto/create-course-content.dto';
+import { CreateCourseContentDto } from './dtos/create-course-content.dto';
 import { CourseContentsService } from './services/course-contents.service';
 import { CourseContent } from './entities/course-content.entity';
 import { CourseContentView } from './views/course-content.view';
-import { UpdateCourseContentDto } from './dto/update-course-content.dto';
+import { UpdateCourseContentDto } from './dtos/update-course-content.dto';
 
 @Controller('courses')
 @ApiBearerAuth()

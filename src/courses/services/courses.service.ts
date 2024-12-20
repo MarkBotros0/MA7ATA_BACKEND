@@ -3,8 +3,8 @@ import {
   Injectable,
   NotFoundException
 } from '@nestjs/common';
-import { CreateCourseDto } from '../dto/create-course.dto';
-import { UpdateCourseDto } from '../dto/update-course.dto';
+import { CreateCourseDto } from '../dtos/create-course.dto';
+import { UpdateCourseDto } from '../dtos/update-course.dto';
 import { Course } from '../entities/course.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

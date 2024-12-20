@@ -6,7 +6,7 @@ import {
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserRole } from './enums/user-roles.enum';
 
 @Injectable()
@@ -71,8 +71,14 @@ export class UsersService {
 
   async update(userId: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOneById(userId);
-    Object.assign(user, updateUserDto);
-    return this.usersRepository.save(user);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { phoneNumber, email, ...updateData } = updateUserDto;
+
+    Object.assign(user, updateData);
+    await this.usersRepository.update(user.id, updateData);
+
+    return this.findOneById(user.id);
   }
 
   async addInstructorRoleToUser(userId: number) {

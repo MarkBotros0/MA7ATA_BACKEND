@@ -5,8 +5,8 @@ import { CourseSection } from '../entities/course-section.entity';
 import { CourseContent } from '../entities/course-content.entity';
 import { CoursesService } from './courses.service';
 import { CourseSectionsService } from './course-sections.service';
-import { CreateCourseContentDto } from '../dto/create-course-content.dto';
-import { UpdateCourseContentDto } from '../dto/update-course-content.dto';
+import { CreateCourseContentDto } from '../dtos/create-course-content.dto';
+import { UpdateCourseContentDto } from '../dtos/update-course-content.dto';
 
 @Injectable()
 export class CourseContentsService {

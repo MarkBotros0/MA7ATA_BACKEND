@@ -8,7 +8,7 @@ import { UsersService } from '../../users/users.service';
 import { VictoryLinkClient } from '../../shared/victory-link/victory-link-client';
 import { Cron } from '@nestjs/schedule';
 import * as process from 'node:process';
-import { LoginDto } from '../dto/login.dto';
+import { LoginDto } from '../dtos/login.dto';
 
 @Injectable()
 export class OtpService {
