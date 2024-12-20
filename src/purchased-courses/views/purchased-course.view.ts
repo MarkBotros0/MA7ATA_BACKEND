@@ -14,7 +14,10 @@ export class PurchasedCourseView {
   }
 
   private renderPurchasedCourse(purchasedCourse: PurchasedCourse): any {
-    const purchasedCourseData = _.pick(purchasedCourse, ['id', 'createdAt']);
+    const purchasedCourseData: Partial<PurchasedCourse> = {
+      id: purchasedCourse.id,
+      createdAt: purchasedCourse.createdAt
+    };
 
     return {
       ...purchasedCourseData,

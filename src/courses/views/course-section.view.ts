@@ -1,11 +1,10 @@
-import * as _ from 'lodash';
 import { CourseSection } from '../entities/course-section.entity';
 import { CourseContentView } from './course-content.view';
 
 export class CourseSectionView {
   constructor(
     private readonly data: CourseSection | CourseSection[],
-    private isPublic: boolean = true
+    private isAuthorized: boolean = true
   ) {}
 
   render(): any {
@@ -18,17 +17,18 @@ export class CourseSectionView {
   }
 
   private renderCourseSection(courseSection: CourseSection): any {
-    const courseContentData = _.pick(courseSection, [
-      'id',
-      'title',
-      'description'
-    ]);
+    const courseContentData: Partial<CourseSection> = {
+      id: courseSection.id,
+      title: courseSection.title,
+      description: courseSection.description,
+      createdAt: courseSection.createdAt
+    };
 
     return {
       ...courseContentData,
       courseContents: new CourseContentView(
         courseSection.courseContents || [],
-        this.isPublic
+        this.isAuthorized
       ).render()
     };
   }

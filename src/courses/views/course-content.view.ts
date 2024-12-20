@@ -1,10 +1,9 @@
-import * as _ from 'lodash';
 import { CourseContent } from '../entities/course-content.entity';
 
 export class CourseContentView {
   constructor(
     private readonly data: CourseContent | CourseContent[],
-    private isAuthenticated: boolean = true
+    private isAuthorized: boolean = true
   ) {}
 
   render(): any {
@@ -17,16 +16,16 @@ export class CourseContentView {
   }
 
   private renderCourseContent(courseContent: CourseContent): any {
-    const courseContentData = _.pick(courseContent, [
-      'id',
-      'title',
-      'description',
-      'contentType'
-    ]);
+    const courseContentData: Partial<CourseContent> = {
+      id: courseContent.id,
+      title: courseContent.title,
+      description: courseContent.description,
+      contentType: courseContent.contentType
+    };
 
     return {
       ...courseContentData,
-      ...(this.isAuthenticated ? { contentUrl: courseContent.contentUrl } : {})
+      ...(this.isAuthorized ? { contentUrl: courseContent.contentUrl } : {})
     };
   }
 }

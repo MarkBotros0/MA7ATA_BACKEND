@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { User } from '../entities/user.entity';
 import { UserRole } from '../enums/user-roles.enum';
 
@@ -25,15 +24,16 @@ export class UserView {
       user.userRoles.includes(role)
     );
 
-    const userData = _.pick(user, [
-      'id',
-      'phoneNumber',
-      'email',
-      'fullName',
-      'date_of_birth',
-      'createdAt',
-      'gender'
-    ]);
+    const userData: Partial<User> = {
+      id: user.id,
+      phoneNumber: user.phoneNumber,
+      email: user.email,
+      fullname: user.fullname,
+      dateOfBirth: user.dateOfBirth,
+      gender: user.gender,
+      createdAt: user.createdAt
+    };
+
     return {
       ...userData,
       highestRole
