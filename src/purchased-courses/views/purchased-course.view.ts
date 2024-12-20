@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { UserView } from '../../users/views/user.view';
 import { PurchasedCourse } from '../entities/purchased-course.entity';
 import { CourseView } from '../../courses/views/course.view';

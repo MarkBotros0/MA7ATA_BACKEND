@@ -39,11 +39,12 @@ export class InitialMigration1734638765443 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE \`course_progress\` (
         \`id\` int NOT NULL AUTO_INCREMENT, 
-        \`is_completed\` tinyint NOT NULL DEFAULT 0, \`last_accessed\` timestamp NULL, 
         \`seen_content\` json NULL, \`purchased_course\` int NULL, 
+        \`percentage_completed\` float NOT NULL DEFAULT '0', 
+        \`is_completed\` tinyint NOT NULL DEFAULT 0, \`last_accessed\` timestamp NULL, 
         \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), 
         \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), 
-        \`deletedAt\` datetime(6) NULL, \`percentage_completed\` float NOT NULL DEFAULT '0', 
+        \`deletedAt\` datetime(6) NULL, 
         UNIQUE INDEX \`REL_33fd21e165b72fbd7e66da7c8d\` (\`purchased_course\`), 
         PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
@@ -60,12 +61,13 @@ export class InitialMigration1734638765443 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE \`courses\` (
         \`id\` int NOT NULL AUTO_INCREMENT, 
+        \`title\` varchar(100) NOT NULL, 
         \`description\` text NULL, 
         \`price\` decimal(10,2) NOT NULL, 
         \`instructor_id\` int NOT NULL, 
         \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), 
         \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), 
-        \`deletedAt\` datetime(6) NULL, \`title\` varchar(100) NOT NULL, 
+        \`deletedAt\` datetime(6) NULL, 
         PRIMARY KEY (\`id\`)) ENGINE=InnoDB`
     );
     await queryRunner.query(

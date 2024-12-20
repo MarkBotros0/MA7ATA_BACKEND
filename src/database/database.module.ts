@@ -14,7 +14,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         password: configService.getOrThrow('MYSQL_PASSWORD'),
         autoLoadEntities: true,
         synchronize: false,
-        logging: false
+        logging: false,
+        ssl: { rejectUnauthorized: true }
       }),
       inject: [ConfigService]
     })

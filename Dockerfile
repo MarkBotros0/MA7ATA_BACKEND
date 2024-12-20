@@ -13,4 +13,4 @@ RUN npm run build
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "npm run typeorm:run-migrations && npm run start:dev"]
+CMD ["npm", "run", "start:dev"]
