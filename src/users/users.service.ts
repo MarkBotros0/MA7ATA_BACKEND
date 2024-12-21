@@ -100,4 +100,12 @@ export class UsersService {
     }
     return user.userRoles.includes(UserRole.INSTRUCTOR);
   }
+
+  async isExistingUser(phoneNumber: string): Promise<boolean> {
+    const user: User = await this.usersRepository.findOne({
+      where: { phoneNumber }
+    });
+
+    return !!user;
+  }
 }

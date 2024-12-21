@@ -18,6 +18,7 @@ import { TokenService } from './services/token.service';
 import { User } from '../users/entities/user.entity';
 import { UserView } from '../users/views/user.view';
 import { RefreshToken } from './decorators/refresh-token.decorator';
+import { UsersService } from '../users/users.service';
 
 @Controller('auth')
 @ApiSecurity('apiKey')
@@ -27,14 +28,18 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly otpService: OtpService,
-    private readonly tokenService: TokenService
+    private readonly tokenService: TokenService,
+    private readonly usersService: UsersService
   ) {}
 
   @Post('send-otp')
   async sendOtpCode(@Body() body: SendOTPDto) {
     await this.otpService.sendOtp(body.phoneNumber);
+    const isExistingUser: boolean = await this.usersService.isExistingUser(
+      body.phoneNumber
+    );
     return {
-      message: 'Otp code has been sent successfully.'
+      isExistingUser
     };
   }
 
