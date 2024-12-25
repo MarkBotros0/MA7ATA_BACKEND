@@ -10,6 +10,7 @@ import { CoursesModule } from './courses/courses.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PurchasedCoursesModule } from './purchased-courses/purchased-courses.module';
+import { DailyMeditationsModule } from './daily-meditations/daily-meditations.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { PurchasedCoursesModule } from './purchased-courses/purchased-courses.mo
     AuthModule,
     UsersModule,
     CoursesModule,
-    PurchasedCoursesModule
+    PurchasedCoursesModule,
+    DailyMeditationsModule
   ],
   controllers: [AppController],
   providers: [AppService]
