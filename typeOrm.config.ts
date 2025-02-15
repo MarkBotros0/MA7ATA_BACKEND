@@ -13,7 +13,7 @@ export default new DataSource({
   database: configService.getOrThrow('MYSQL_DATABASE'),
   username: configService.getOrThrow('MYSQL_USERNAME'),
   password: configService.getOrThrow('MYSQL_PASSWORD'),
-  ssl: { rejectUnauthorized: true },
+  ssl: { rejectUnauthorized: false },
   synchronize: false,
   logging: true,
   migrations: ['./migrations/*.ts'],

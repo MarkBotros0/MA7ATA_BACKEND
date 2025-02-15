@@ -15,7 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         autoLoadEntities: true,
         synchronize: false,
         logging: false,
-        ssl: { rejectUnauthorized: true }
+        ssl: { rejectUnauthorized: false }
       }),
       inject: [ConfigService]
     })
