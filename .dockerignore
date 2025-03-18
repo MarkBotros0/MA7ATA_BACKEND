@@ -1,6 +1,6 @@
 # Docker
 .docker
-Dockerfile
+additional_files/Dockerfile
 .dockerignore
 
 # Git
