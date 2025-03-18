@@ -32,15 +32,16 @@ export class User extends BaseEntity {
   password: string;
 
   @Column({
-    type: 'set',
+    type: 'enum',
     name: 'user_roles',
     enum: UserRole,
+    array: true,
     default: [UserRole.NORMAL]
   })
   userRoles: UserRole[];
 
   @Column({
-    type: 'set',
+    type: 'enum',
     name: 'gender',
     enum: Gender,
     nullable: true
