@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function setupSwagger(app: INestApplication): void {
   const config = new DocumentBuilder()
-    .setTitle('Qoodz')
+    .setTitle('Ma7ata')
     .setVersion('1.0')
     .addApiKey(
       {
